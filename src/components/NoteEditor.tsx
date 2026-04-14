@@ -33,7 +33,7 @@ interface NoteEditorProps {
 	darkMode: boolean;
 }
 
-const LineNumbers: React.FC<{ count: number; darkMode: boolean }> = ({
+/* const LineNumbers: React.FC<{ count: number; darkMode: boolean }> = ({
 	count,
 	darkMode,
 }) => {
@@ -42,14 +42,13 @@ const LineNumbers: React.FC<{ count: number; darkMode: boolean }> = ({
 		<div className={`line-numbers ${darkMode ? "dark" : ""}`}>
 			{lines.map((num) => (
 				// <div key={num} className="line-number">
-				<div key={num} >
-					{/* {num} */}
-					<p>{num}</p>
+				<div key={num}>
+					{num}
 				</div>
 			))}
 		</div>
 	);
-};
+}; */
 
 const NoteEditor: React.FC<NoteEditorProps> = ({
 	value,
@@ -62,26 +61,114 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 	const renderElement = useCallback((props: any) => <Element {...props} />, []);
 	const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
 
-	const handleKeyDown = (event: React.KeyboardEvent) => {
-		if (!event.ctrlKey) return;
+	// const handleKeyDown = (event: React.KeyboardEvent) => {
+	// 	if (!event.ctrlKey) return;
 
-		switch (event.key) {
-			case "b":
-				event.preventDefault();
-				toggleMark(editor, "bold");
-				break;
-			case "i":
-				event.preventDefault();
-				toggleMark(editor, "italic");
-				break;
-			case "u":
-				event.preventDefault();
-				toggleMark(editor, "underline");
-				break;
-			case "`":
-				event.preventDefault();
-				toggleMark(editor, "code");
-				break;
+	// 	switch (event.key) {
+	// 		case "b":
+	// 			event.preventDefault();
+	// 			toggleMark(editor, "bold");
+	// 			break;
+	// 		case "i":
+	// 			event.preventDefault();
+	// 			toggleMark(editor, "italic");
+	// 			break;
+	// 		case "u":
+	// 			event.preventDefault();
+	// 			toggleMark(editor, "underline");
+	// 			break;
+	// 		case "`":
+	// 			event.preventDefault();
+	// 			toggleMark(editor, "code");
+	// 			break;
+	// 	}
+	// };
+
+	const handleKeyDown = (event: React.KeyboardEvent) => {
+		const key = event.key.toLowerCase();
+
+		// -------- FORMAT SHORTCUTS --------
+		if (event.ctrlKey && !event.shiftKey) {
+			switch (key) {
+				case "b":
+					event.preventDefault();
+					toggleMark(editor, "bold");
+					return;
+
+				case "i":
+					event.preventDefault();
+					toggleMark(editor, "italic");
+					return;
+
+				case "u":
+					event.preventDefault();
+					toggleMark(editor, "underline");
+					return;
+
+				case "`":
+					event.preventDefault();
+					toggleMark(editor, "code");
+					return;
+
+				case "1":
+					event.preventDefault();
+					toggleBlock(editor, "heading-one");
+					return;
+
+				case "2":
+					event.preventDefault();
+					toggleBlock(editor, "heading-two");
+					return;
+
+				case "l":
+					event.preventDefault();
+					toggleBlock(editor, "bulleted-list");
+					return;
+
+				case "o":
+					event.preventDefault();
+					toggleBlock(editor, "numbered-list");
+					return;
+				case "k":
+					event.preventDefault();
+					toggleBlock(editor, "check-list-item");
+					return;
+			}
+		}
+
+		// -------- INSERT SHORTCUTS --------
+		if (event.ctrlKey && event.shiftKey) {
+			switch (key) {
+				case "i":
+					event.preventDefault();
+					insertImage();
+					return;
+
+				case "v":
+					event.preventDefault();
+					insertVideo();
+					return;
+
+				case "a":
+					event.preventDefault();
+					insertAudio();
+					return;
+
+				case "d":
+					event.preventDefault();
+					insertDrawing();
+					return;
+
+				case "c":
+					event.preventDefault();
+					insertCodeBlock();
+					return;
+
+				case "p":
+					event.preventDefault();
+					exportToPDF();
+					return;
+			}
 		}
 	};
 
@@ -279,66 +366,191 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 	return (
 		<div className={`note-editor ${darkMode ? "dark" : ""}`}>
 			<div className="toolbar">
-				<button onClick={() => toggleMark(editor, "bold")}>
+				{/* <button onClick={() => toggleMark(editor, "bold")}>
+					<Bold size={16} />
+				</button> */}
+				<button
+					title="Bold (Ctrl+B)"
+					className={isMarkActive(editor, "bold") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault(); // IMPORTANT (keeps focus in editor)
+						toggleMark(editor, "bold");
+					}}
+				>
 					<Bold size={16} />
 				</button>
-				<button onClick={() => toggleMark(editor, "italic")}>
+				{/* <button onClick={() => toggleMark(editor, "italic")}>
+				</button> */}
+				<button
+					title="Italic (Ctrl+i)"
+					className={isMarkActive(editor, "italic") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault(); // IMPORTANT (keeps focus in editor)
+						toggleMark(editor, "italic");
+					}}
+				>
 					<Italic size={16} />
 				</button>
-				<button onClick={() => toggleMark(editor, "underline")}>
+				<button
+					title="Underline (Ctrl+U)"
+					className={isMarkActive(editor, "underline") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault(); // IMPORTANT (keeps focus in editor)
+						toggleMark(editor, "underline");
+					}}
+				>
 					<Underline size={16} />
 				</button>
-				<button onClick={() => toggleMark(editor, "code")}>
+
+				<button
+					title="Code (Ctrl+`)"
+					className={isMarkActive(editor, "code") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault(); // IMPORTANT (keeps focus in editor)
+						toggleMark(editor, "code");
+					}}
+				>
 					<Code size={16} />
 				</button>
-				<button onClick={() => toggleBlock(editor, "heading-one")}>
+
+				<button
+					title="Heading 1 (Ctrl+1)"
+					className={isBlockActive(editor, "heading-one") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "heading-one");
+					}}
+				>
 					<Heading1 size={16} />
 				</button>
-				<button onClick={() => toggleBlock(editor, "heading-two")}>
+				<button
+					title="Heading 2 (Ctrl+2)"
+					className={isBlockActive(editor, "heading-two") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "heading-two");
+					}}
+				>
 					<Heading2 size={16} />
 				</button>
-				<button onClick={() => toggleBlock(editor, "bulleted-list")}>
+
+				<button
+					title="Bullet List (Ctrl+L)"
+					className={isBlockActive(editor, "bulleted-list") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "bulleted-list");
+					}}
+				>
 					<List size={16} />
 				</button>
-				<button onClick={() => toggleBlock(editor, "numbered-list")}>
+
+				<button
+					title="Numbered List (Ctrl+O)"
+					className={isBlockActive(editor, "numbered-list") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "numbered-list");
+					}}
+				>
 					<ListOrdered size={16} />
 				</button>
-				<button onClick={() => toggleBlock(editor, "check-list-item")}>
+
+				<button
+					title="Check List (Ctrl+K)"
+					className={isBlockActive(editor, "check-list-item") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "check-list-item");
+					}}
+				>
 					<CheckSquare size={16} />
 				</button>
-				<button onClick={insertImage}>
-					<Image size={16} />
-				</button>
-				<button onClick={insertVideo}>
-					<Video size={16} />
-				</button>
-				<button onClick={insertAudio}>
+
+				<button
+					onClick={insertAudio}
+					title="Insert Audio (Ctrl + Shift + A)"
+					className={isBlockActive(editor, "insertAudio") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "insertAudio");
+					}}
+				>
 					<Music size={16} />
 				</button>
-				<button onClick={insertDrawing}>Draw</button>
-				<button onClick={insertCodeBlock}>
+
+				<button
+					onClick={insertImage}
+					title="Insert Image (Ctrl + Shift + I)"
+					className={isBlockActive(editor, "insertImage") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "insertImage");
+					}}
+				>
+					<Image size={16} />
+				</button>
+				<button onClick={insertVideo}
+				title="Insert Image (Ctrl + Shift + V)"
+					className={isBlockActive(editor, "insertVideo") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "insertVideo");
+					}}
+				>
+					<Video size={16} />
+				</button>
+
+				<button
+					onClick={insertCodeBlock}
+					title="Insert Code Block (Ctrl + Shift + C)"
+					className={isBlockActive(editor, "insertCodeBlock") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "insertCodeBlock");
+					}}
+				>
 					<Code2 size={16} />
 				</button>
-				<button onClick={exportToPDF}>
+				<button
+					onClick={insertDrawing}
+					title="Insert Drawing (Ctrl + Shift + D)"
+					className={isBlockActive(editor, "insertDrawing") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "insertDrawing");
+					}}
+				>
+					Draw
+				</button>
+				<button
+					onClick={exportToPDF}
+					title="Export to PDF (Ctrl + Shift + P)"
+					className={isBlockActive(editor, "exportToPDF") ? "active" : ""}
+					onMouseDown={(e) => {
+						e.preventDefault();
+						toggleBlock(editor, "exportToPDF");
+					}}
+				>
 					<FileText size={16} />
 				</button>
 			</div>
 			<div className="editor-wrapper">
-  <div className="line-numberss">
+				{/* <div className="line-numberss">
     <LineNumbers count={lineCount} darkMode={darkMode} />
-  </div>
+  </div> */}
 
-  <div className="editor-container">
-    <Slate editor={editor} initialValue={value} onChange={onChange}>
-      <Editable
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        onKeyDown={handleKeyDown}
-        onPaste={handlePaste}
-      />
-    </Slate>
-  </div>
-</div>
+				<div className="editor-container">
+					<Slate editor={editor} initialValue={value} onChange={onChange}>
+						<Editable
+							renderElement={renderElement}
+							renderLeaf={renderLeaf}
+							onKeyDown={handleKeyDown}
+							onPaste={handlePaste}
+						/>
+					</Slate>
+				</div>
+			</div>
 			{/* <div className="editor-wrapper">
 				<LineNumbers count={lineCount} darkMode={darkMode} />
 				<Slate editor={editor} initialValue={value} onChange={onChange} style={{ flex: 3 }}>
