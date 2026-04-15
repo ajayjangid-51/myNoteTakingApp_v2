@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { type ChangeEvent, useRef, useState, useCallback, useMemo } from "react";
 import {
 	createEditor,
 	Editor,
@@ -23,9 +23,11 @@ import {
 	Code2,
 	FileText,
 } from "lucide-react";
-import { ReactSketchCanvas } from "react-sketch-canvas";
+import { ReactSketchCanvas, type ReactSketchCanvasRef, } from "react-sketch-canvas";
 import MonacoEditor from "@monaco-editor/react";
 import html2pdf from "html2pdf.js";
+import DrawandErase from "./reactSketchCanvas/DrawandErase";
+
 
 interface NoteEditorProps {
 	value: any[];
@@ -33,56 +35,15 @@ interface NoteEditorProps {
 	darkMode: boolean;
 }
 
-/* const LineNumbers: React.FC<{ count: number; darkMode: boolean }> = ({
-	count,
-	darkMode,
-}) => {
-	const lines = Array.from({ length: count }, (_, i) => i + 1);
-	return (
-		<div className={`line-numbers ${darkMode ? "dark" : ""}`}>
-			{lines.map((num) => (
-				// <div key={num} className="line-number">
-				<div key={num}>
-					{num}
-				</div>
-			))}
-		</div>
-	);
-}; */
-
 const NoteEditor: React.FC<NoteEditorProps> = ({
 	value,
 	onChange,
 	darkMode,
 }) => {
 	const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-	const lineCount = Math.max(value.length, 1);
-
+	
 	const renderElement = useCallback((props: any) => <Element {...props} />, []);
 	const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
-
-	// const handleKeyDown = (event: React.KeyboardEvent) => {
-	// 	if (!event.ctrlKey) return;
-
-	// 	switch (event.key) {
-	// 		case "b":
-	// 			event.preventDefault();
-	// 			toggleMark(editor, "bold");
-	// 			break;
-	// 		case "i":
-	// 			event.preventDefault();
-	// 			toggleMark(editor, "italic");
-	// 			break;
-	// 		case "u":
-	// 			event.preventDefault();
-	// 			toggleMark(editor, "underline");
-	// 			break;
-	// 		case "`":
-	// 			event.preventDefault();
-	// 			toggleMark(editor, "code");
-	// 			break;
-	// 	}
-	// };
 
 	const handleKeyDown = (event: React.KeyboardEvent) => {
 		const key = event.key.toLowerCase();
@@ -366,9 +327,6 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 	return (
 		<div className={`note-editor ${darkMode ? "dark" : ""}`}>
 			<div className="toolbar">
-				{/* <button onClick={() => toggleMark(editor, "bold")}>
-					<Bold size={16} />
-				</button> */}
 				<button
 					title="Bold (Ctrl+B)"
 					className={isMarkActive(editor, "bold") ? "active" : ""}
@@ -379,8 +337,6 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 				>
 					<Bold size={16} />
 				</button>
-				{/* <button onClick={() => toggleMark(editor, "italic")}>
-				</button> */}
 				<button
 					title="Italic (Ctrl+i)"
 					className={isMarkActive(editor, "italic") ? "active" : ""}
@@ -536,9 +492,6 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 				</button>
 			</div>
 			<div className="editor-wrapper">
-				{/* <div className="line-numberss">
-    <LineNumbers count={lineCount} darkMode={darkMode} />
-  </div> */}
 
 				<div className="editor-container">
 					<Slate editor={editor} initialValue={value} onChange={onChange}>
@@ -547,22 +500,12 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 							renderLeaf={renderLeaf}
 							onKeyDown={handleKeyDown}
 							onPaste={handlePaste}
+						placeholder="Start writing your note..."
+
 						/>
 					</Slate>
 				</div>
 			</div>
-			{/* <div className="editor-wrapper">
-				<LineNumbers count={lineCount} darkMode={darkMode} />
-				<Slate editor={editor} initialValue={value} onChange={onChange} style={{ flex: 3 }}>
-					<Editable
-						renderElement={renderElement}
-						renderLeaf={renderLeaf}
-						onKeyDown={handleKeyDown}
-						onPaste={handlePaste}
-						// placeholder="Start writing your note..."
-					/>
-				</Slate>
-			</div> */}
 		</div>
 	);
 };
@@ -622,13 +565,12 @@ const Element = ({ attributes, children, element }: any) => {
 			return <audio {...attributes} src={element.url} controls />;
 		case "drawing":
 			return (
-				<div {...attributes}>
-					<ReactSketchCanvas
-						style={{ border: "1px solid #ccc", width: "80%", height: "300px" }}
-						strokeWidth={4}
-						strokeColor="red"
-					/>
-				</div>
+			
+
+				<div {...attributes} style={{height:"55vh" }} contentEditable={false}>
+      <DrawandErase />
+      {children}
+    </div>
 			);
 		case "code-block":
 			return (
@@ -649,7 +591,7 @@ const Element = ({ attributes, children, element }: any) => {
 							}
 						}}
 					>
-						Run
+						Run-1
 					</button>
 				</div>
 			);
