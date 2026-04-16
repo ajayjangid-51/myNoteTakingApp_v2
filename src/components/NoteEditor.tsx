@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, useRef, useState, useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
 	createEditor,
 	Editor,
@@ -23,11 +23,12 @@ import {
 	Code2,
 	FileText,
 } from "lucide-react";
-import { ReactSketchCanvas, type ReactSketchCanvasRef, } from "react-sketch-canvas";
 import MonacoEditor from "@monaco-editor/react";
+
 import html2pdf from "html2pdf.js";
 import DrawandErase from "./reactSketchCanvas/DrawandErase";
-
+import V1 from "./codeBlockEditor/V1";
+// import V1 from "./codeBlockEditor/V1";
 
 interface NoteEditorProps {
 	value: any[];
@@ -41,7 +42,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 	darkMode,
 }) => {
 	const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-	
+
 	const renderElement = useCallback((props: any) => <Element {...props} />, []);
 	const renderLeaf = useCallback((props: any) => <Leaf {...props} />, []);
 
@@ -446,8 +447,9 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 				>
 					<Image size={16} />
 				</button>
-				<button onClick={insertVideo}
-				title="Insert Image (Ctrl + Shift + V)"
+				<button
+					onClick={insertVideo}
+					title="Insert Image (Ctrl + Shift + V)"
 					className={isBlockActive(editor, "insertVideo") ? "active" : ""}
 					onMouseDown={(e) => {
 						e.preventDefault();
@@ -492,7 +494,6 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 				</button>
 			</div>
 			<div className="editor-wrapper">
-
 				<div className="editor-container">
 					<Slate editor={editor} initialValue={value} onChange={onChange}>
 						<Editable
@@ -500,8 +501,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 							renderLeaf={renderLeaf}
 							onKeyDown={handleKeyDown}
 							onPaste={handlePaste}
-						placeholder="Start writing your note..."
-
+							placeholder="Start writing your note..."
 						/>
 					</Slate>
 				</div>
@@ -565,17 +565,15 @@ const Element = ({ attributes, children, element }: any) => {
 			return <audio {...attributes} src={element.url} controls />;
 		case "drawing":
 			return (
-			
-
-				<div {...attributes} style={{height:"55vh" }} contentEditable={false}>
-      <DrawandErase />
-      {children}
-    </div>
+				<div {...attributes} style={{ height: "55vh" }} contentEditable={false}>
+					<DrawandErase />
+					{children}
+				</div>
 			);
 		case "code-block":
 			return (
 				<div {...attributes} className="code-block">
-					<MonacoEditor
+					{/* <MonacoEditor
 						height="200px"
 						language={(element as any).language}
 						value={(element as any).code}
@@ -592,7 +590,10 @@ const Element = ({ attributes, children, element }: any) => {
 						}}
 					>
 						Run-1
-					</button>
+					</button> */}
+					{/* <V1 /> */}
+					{/* <MonacoEditor height="50vh" defaultLanguage="javascript" defaultValue="// some comment" />; */}
+					<V1 />
 				</div>
 			);
 		default:
