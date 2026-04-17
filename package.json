@@ -18,7 +18,8 @@
     "react-sketch-canvas": "^6.2.0",
     "slate": "^0.124.0",
     "slate-history": "^0.113.1",
-    "slate-react": "^0.124.0"
+    "slate-react": "^0.124.0",
+    "wavesurfer.js": "^7.12.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

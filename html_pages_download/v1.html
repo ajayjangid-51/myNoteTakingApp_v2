@@ -1,0 +1,977 @@
+<!doctype html>
+<!-- saved from url=(0022)http://localhost:5173/ -->
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<script type="module">
+			import { injectIntoGlobalHook } from "/@react-refresh";
+			injectIntoGlobalHook(window);
+			window.$RefreshReg$ = () => {};
+			window.$RefreshSig$ = () => (type) => type;
+		</script>
+
+		<script type="module" src="./My Note Taking App_2_files/client"></script>
+
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="http://localhost:5173/vite.svg"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>My Note Taking App</title>
+		<style
+			type="text/css"
+			data-vite-dev-id="C:/dsaDevs/devs/NSE/MyNoteTakingApp/src/App.css"
+		>
+			.app {
+				display: flex;
+				height: 100vh;
+				font-family: Arial, sans-serif;
+			}
+
+			.app.dark {
+				background-color: #1a1a1a;
+				color: #ffffff;
+			}
+
+			.sidebar {
+				width: 250px;
+				background-color: #f4f4f4;
+				padding: 10px;
+				border-right: 1px solid #ddd;
+				overflow-y: auto;
+			}
+
+			.app.dark .sidebar {
+				background-color: #2a2a2a;
+				border-right: 1px solid #444;
+			}
+
+			.sidebar-header {
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 10px;
+			}
+
+			.new-note-btn,
+			.dark-mode-btn {
+				padding: 8px 12px;
+				background-color: #007bff;
+				color: white;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+
+			.dark-mode-btn {
+				background-color: #555;
+			}
+
+			.notes-list {
+				list-style: none;
+				padding: 0;
+			}
+
+			.note-item {
+				display: flex;
+				align-items: center;
+				padding: 8px;
+				cursor: pointer;
+				border-radius: 4px;
+				margin-bottom: 5px;
+			}
+
+			.note-item:hover {
+				background-color: #e9ecef;
+			}
+
+			.app.dark .note-item:hover {
+				background-color: #3a3a3a;
+			}
+
+			.note-item.active {
+				background-color: #007bff;
+				color: white;
+			}
+
+			.note-actions {
+				margin-left: auto;
+				display: flex;
+				gap: 5px;
+			}
+
+			.note-actions button {
+				background: none;
+				border: none;
+				cursor: pointer;
+				color: inherit;
+			}
+
+			.main-content {
+				flex: 1;
+				padding: 20px;
+				overflow-y: auto;
+			}
+
+			.no-note {
+				text-align: center;
+				margin-top: 50px;
+				font-size: 18px;
+				color: #666;
+			}
+
+			.app.dark .no-note {
+				color: #ccc;
+			}
+
+			.note-editor {
+				display: flex;
+				/* flex:3; */
+				/* border:1px solid red; */
+				width: 60vw;
+				height: 95vh;
+				/* overflow-y: auto; */
+				margin: 0 auto;
+			}
+
+			.editor-wrapper {
+				display: flex;
+				gap: 0;
+				/* border: 1px solid #ddd; */
+				border-radius: 4px;
+				background-color: #fff;
+				/* margin-top: 10px; */
+				/* margin: 10px; */
+				margin: 0px 0px 0px 10px;
+
+				/* border: 2px solid yellow; */
+
+				width: 100%;
+				/* height: 90vh; */
+				/* padding: 10px; */
+				overflow-y: auto;
+				/* border: 2px solid !important; */
+			}
+
+			/* .editor-wrapper {
+  display: flex;
+  height: 100%;
+} */
+
+			/* Fixed width */
+			.line-numberss {
+				width: 50px; /* adjust as needed */
+				min-width: 50px;
+				max-width: 50px;
+			}
+
+			/* Remaining space */
+			.editor-container {
+				/* flex: 1; */
+			}
+
+			.app.dark .editor-wrapper {
+				border-color: #444;
+				background-color: #2a2a2a;
+			}
+
+			.line-numbers {
+				display: flex;
+				flex: 1;
+				flex-direction: column;
+				background-color: #f5f5f5;
+				border-right: 1px solid #ddd;
+				/* padding: 12px 8px; */
+				padding: 2px 2px;
+				min-width: 50px;
+				text-align: right;
+				user-select: none;
+				font-family: "Courier New", monospace;
+				font-size: 14px;
+				color: #999;
+				/* line-height: 0.8; */
+			}
+
+			.app.dark .line-numbers {
+				background-color: #1f1f1f;
+				border-right-color: #444;
+				color: #666;
+			}
+
+			.line-number {
+				height: 1.5em;
+				display: flex;
+				align-items: center;
+				justify-content: flex-end;
+				padding-right: 8px;
+			}
+
+			.editor-wrapper > div {
+				flex: 1;
+				padding: 12px 16px;
+				line-height: 1.5;
+				font-size: 14px;
+			}
+
+			.editor-wrapper [role="textbox"] {
+				outline: none;
+			}
+
+			.toolbar {
+				/* border: 1px solid blue; */
+				display: flex;
+				flex-direction: column;
+				/* flex-wrap: wrap; */
+				gap: 5px;
+				/* margin-bottom: 10px; */
+				padding: 20px 10px;
+				background-color: #f8f9fa;
+				border-radius: 4px;
+			}
+
+			.app.dark .toolbar {
+				background-color: #333;
+			}
+
+			.toolbar button {
+				padding: 6px 10px;
+				background: none;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				cursor: pointer;
+			}
+
+			.app.dark .toolbar button {
+				border-color: #555;
+				color: #fff;
+			}
+
+			.check-list-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+
+			.code-block {
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				padding: 10px;
+				margin: 10px 0;
+			}
+
+			.app.dark .code-block {
+				border-color: #555;
+			}
+
+			.toolbar button {
+				background: transparent;
+				border: none;
+				padding: 6px;
+				cursor: pointer;
+				border-radius: 6px;
+			}
+
+			.toolbar button.active {
+				background: #444; /* dark mode */
+				color: #fff;
+			}
+
+			.toolbar button:hover {
+				background: #333;
+			}
+
+			/* draw styling */
+			.draw-container {
+				border: 1px solid #2a2a2a;
+				border-radius: 12px;
+				background: #1e1e1e;
+				padding: 10px;
+				color: #fff;
+				/* height: 100%; */
+				/* border: 1px solid red; */
+				height: fit-content;
+				height: auto;
+				height: 100%;
+			}
+
+			/* Toolbar */
+			.draw-toolbar {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 10px;
+				margin-bottom: 10px;
+			}
+
+			/* Groups */
+			.tool-group {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				background: #2a2a2a;
+				padding: 6px 10px;
+				border-radius: 8px;
+			}
+
+			/* Buttons */
+			.tool-group button {
+				background: transparent;
+				border: none;
+				color: #ccc;
+				padding: 6px 8px;
+				border-radius: 6px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+			}
+
+			.tool-group button:hover {
+				background: #3a3a3a;
+				color: #fff;
+			}
+
+			.tool-group button.active {
+				background: #4f46e5;
+				color: white;
+			}
+
+			/* Sliders */
+			.sliders {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.sliders label {
+				font-size: 12px;
+				color: #aaa;
+			}
+
+			/* Color inputs */
+			input[type="color"] {
+				width: 28px;
+				height: 28px;
+				border: none;
+				padding: 0;
+				background: none;
+				cursor: pointer;
+			}
+
+			/* Toggle */
+			.switch {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				font-size: 12px;
+				color: #ccc;
+			}
+
+			/* Canvas */
+			.canvas-wrapper {
+				border: 1px solid #333;
+				border-radius: 10px;
+				overflow: hidden;
+				background: #fff;
+				/* height: 50vh; */
+				/* height: 100%; */
+				/* height: fit-content; */
+				/* height: max-content; */
+				height: 80%;
+			}
+
+			/* Canvas sizing */
+			.canvas-wrapper canvas {
+				width: 100% !important;
+				height: 300px !important;
+			}
+		</style>
+		<style
+			type="text/css"
+			data-vite-dev-id="C:/dsaDevs/devs/NSE/MyNoteTakingApp/src/index.css"
+		>
+			:root {
+				font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+				line-height: 1.5;
+				font-weight: 400;
+
+				color-scheme: light dark;
+				color: rgba(255, 255, 255, 0.87);
+				background-color: #242424;
+
+				font-synthesis: none;
+				text-rendering: optimizeLegibility;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				-webkit-text-size-adjust: 100%;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+			}
+
+			#root {
+				height: 100vh;
+			}
+
+			@media (prefers-color-scheme: light) {
+				:root {
+					color: #213547;
+					background-color: #ffffff;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root">
+			<div class="app dark">
+				<div class="sidebar dark">
+					<div class="sidebar-header">
+						<button class="new-note-btn">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="lucide lucide-plus"
+								aria-hidden="true"
+							>
+								<path d="M5 12h14"></path>
+								<path d="M12 5v14"></path>
+							</svg>
+							New Note</button
+						><button class="dark-mode-btn">☀️</button>
+					</div>
+					<div class="notes-list">
+						<div class="note-item active">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="16"
+								height="16"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								class="lucide lucide-file-text"
+								aria-hidden="true"
+							>
+								<path
+									d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+								></path>
+								<path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+								<path d="M10 9H8"></path>
+								<path d="M16 13H8"></path>
+								<path d="M16 17H8"></path></svg
+							><span>New Note</span>
+							<div class="note-actions">
+								<button>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="lucide lucide-pen-line"
+										aria-hidden="true"
+									>
+										<path d="M13 21h8"></path>
+										<path
+											d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"
+										></path>
+									</svg></button
+								><button>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="14"
+										height="14"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										class="lucide lucide-trash2 lucide-trash-2"
+										aria-hidden="true"
+									>
+										<path d="M10 11v6"></path>
+										<path d="M14 11v6"></path>
+										<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+										<path d="M3 6h18"></path>
+										<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="main-content">
+					<div class="note-editor dark">
+						<div class="toolbar">
+							<button title="Bold (Ctrl+B)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-bold"
+									aria-hidden="true"
+								>
+									<path
+										d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
+									></path>
+								</svg></button
+							><button title="Italic (Ctrl+i)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-italic"
+									aria-hidden="true"
+								>
+									<line x1="19" x2="10" y1="4" y2="4"></line>
+									<line x1="14" x2="5" y1="20" y2="20"></line>
+									<line x1="15" x2="9" y1="4" y2="20"></line>
+								</svg></button
+							><button title="Underline (Ctrl+U)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-underline"
+									aria-hidden="true"
+								>
+									<path d="M6 4v6a6 6 0 0 0 12 0V4"></path>
+									<line x1="4" x2="20" y1="20" y2="20"></line>
+								</svg></button
+							><button title="Heading 1 (Ctrl+1)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-heading1 lucide-heading-1"
+									aria-hidden="true"
+								>
+									<path d="M4 12h8"></path>
+									<path d="M4 18V6"></path>
+									<path d="M12 18V6"></path>
+									<path d="m17 12 3-2v8"></path>
+								</svg></button
+							><button title="Heading 2 (Ctrl+2)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-heading2 lucide-heading-2"
+									aria-hidden="true"
+								>
+									<path d="M4 12h8"></path>
+									<path d="M4 18V6"></path>
+									<path d="M12 18V6"></path>
+									<path d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1"></path>
+								</svg></button
+							><button title="Bullet List (Ctrl+L)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-list"
+									aria-hidden="true"
+								>
+									<path d="M3 5h.01"></path>
+									<path d="M3 12h.01"></path>
+									<path d="M3 19h.01"></path>
+									<path d="M8 5h13"></path>
+									<path d="M8 12h13"></path>
+									<path d="M8 19h13"></path>
+								</svg></button
+							><button title="Numbered List (Ctrl+O)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-list-ordered"
+									aria-hidden="true"
+								>
+									<path d="M11 5h10"></path>
+									<path d="M11 12h10"></path>
+									<path d="M11 19h10"></path>
+									<path d="M4 4h1v5"></path>
+									<path d="M4 9h2"></path>
+									<path
+										d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
+									></path>
+								</svg></button
+							><button title="Check List (Ctrl+K)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-square-check-big"
+									aria-hidden="true"
+								>
+									<path
+										d="M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344"
+									></path>
+									<path d="m9 11 3 3L22 4"></path>
+								</svg></button
+							><button title="Insert Audio (Ctrl + Shift + A)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-music"
+									aria-hidden="true"
+								>
+									<path d="M9 18V5l12-2v13"></path>
+									<circle cx="6" cy="18" r="3"></circle>
+									<circle cx="18" cy="16" r="3"></circle>
+								</svg></button
+							><button title="Insert Image (Ctrl + Shift + I)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-image"
+									aria-hidden="true"
+								>
+									<rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+									<circle cx="9" cy="9" r="2"></circle>
+									<path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+								</svg></button
+							><button title="Insert Image (Ctrl + Shift + V)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-video"
+									aria-hidden="true"
+								>
+									<path
+										d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"
+									></path>
+									<rect x="2" y="6" width="14" height="12" rx="2"></rect>
+								</svg></button
+							><button title="Insert Code Block (Ctrl + Shift + C)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-code-xml"
+									aria-hidden="true"
+								>
+									<path d="m18 16 4-4-4-4"></path>
+									<path d="m6 8-4 4 4 4"></path>
+									<path d="m14.5 4-5 16"></path>
+								</svg></button
+							><button title="Insert Drawing (Ctrl + Shift + D)" class="">
+								Draw</button
+							><button title="Export to PDF (Ctrl + Shift + P)" class="">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="16"
+									height="16"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									class="lucide lucide-file-text"
+									aria-hidden="true"
+								>
+									<path
+										d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+									></path>
+									<path d="M14 2v5a1 1 0 0 0 1 1h5"></path>
+									<path d="M10 9H8"></path>
+									<path d="M16 13H8"></path>
+									<path d="M16 17H8"></path>
+								</svg>
+							</button>
+						</div>
+						<div class="editor-wrapper">
+							<div class="editor-container">
+								<div
+									role="textbox"
+									aria-multiline="true"
+									translate="no"
+									data-slate-editor="true"
+									data-slate-node="value"
+									contenteditable="true"
+									zindex="-1"
+									style="
+										position: relative;
+										white-space: pre-wrap;
+										overflow-wrap: break-word;
+									"
+								>
+									<p data-slate-node="element">
+										<span data-slate-node="text"
+											><span data-slate-leaf="true"
+												><span data-slate-zero-width="n" data-slate-length="0"
+													>﻿<br /></span></span
+										></span>
+									</p>
+									<p data-slate-node="element">
+										<span data-slate-node="text"
+											><span data-slate-leaf="true"
+												><span data-slate-zero-width="n" data-slate-length="0"
+													>﻿<br /></span></span
+										></span>
+									</p>
+									<div
+										data-slate-node="element"
+										contenteditable="false"
+										style="height: 55vh"
+									>
+										<div class="draw-container">
+											<div class="draw-toolbar">
+												<div class="tool-group">
+													<label>Stroke</label
+													><input type="color" value="#000000" /><label
+														>Canvas</label
+													><input type="color" value="#aea2a2" />
+												</div>
+												<div class="tool-group">
+													<button class="active">✏️</button
+													><button class="">🧽</button>
+												</div>
+												<div class="tool-group sliders">
+													<div>
+														<label>Stroke</label
+														><input type="range" min="1" max="20" value="5" />
+													</div>
+													<div>
+														<label>Eraser</label
+														><input
+															type="range"
+															min="1"
+															max="20"
+															disabled=""
+															value="10"
+														/>
+													</div>
+												</div>
+												<div class="tool-group">
+													<button>↶</button><button>↷</button><button>🧹</button
+													><button>♻️</button>
+												</div>
+												<div class="tool-group">
+													<label class="switch"
+														><input type="checkbox" /><span
+															>Read only</span
+														></label
+													>
+												</div>
+											</div>
+											<div class="canvas-wrapper">
+												<div
+													role="presentation"
+													class=""
+													touch-action="none"
+													style="
+														touch-action: none;
+														width: 100%;
+														height: 100%;
+														border: 0.0625rem solid rgb(156, 156, 156);
+														border-radius: 0.25rem;
+													"
+												>
+													<svg
+														version="1.1"
+														baseProfile="full"
+														xmlns="http://www.w3.org/2000/svg"
+														xmlns:xlink="http://www.w3.org/1999/xlink"
+														id="react-sketch-canvas"
+														style="width: 100%; height: 100%"
+													>
+														<g
+															id="react-sketch-canvas__eraser-stroke-group"
+															display="none"
+														>
+															<rect
+																id="react-sketch-canvas__mask-background"
+																x="0"
+																y="0"
+																width="100%"
+																height="100%"
+																fill="white"
+															></rect>
+														</g>
+														<defs></defs>
+														<g
+															id="react-sketch-canvas__canvas-background-group"
+														>
+															<rect
+																id="react-sketch-canvas__canvas-background"
+																x="0"
+																y="0"
+																width="100%"
+																height="100%"
+																fill="#aea2a2"
+															></rect>
+														</g>
+														<g
+															id="react-sketch-canvas__stroke-group-0"
+															mask="url(#react-sketch-canvas__eraser-mask-0)"
+														>
+															<path
+																id="react-sketch-canvas__0"
+																d="M 179.4305419921875,155.7777862548828 C 179.4305419921875,155.9555633544922 178.897216796875,157.5555633544922 179.4305419921875, 156.6666717529297 C 179.9638671875,155.77778015136718 180.14161376953126,156.31109924316405 182.09716796875, 151.3333282470703 C 184.05272216796874,146.35555725097657 185.4749755859375,141.02225646972656 189.20831298828125, 131.77781677246094 C 192.941650390625,122.53337707519532 194.7194091796875,118.9778045654297 200.76385498046875, 105.11112976074219 C 206.80830078125,91.24445495605468 213.0305419921875,76.31111450195313 219.4305419921875, 62.44444274902344 C 225.8305419921875,48.577770996093754 229.386083984375,42.355541992187504 232.76385498046875, 35.77777099609375 C 236.1416259765625,29.2 234.89716796875,30.444476318359374 236.31939697265625, 29.555587768554688 C 237.7416259765625,28.66669921875 235.43055419921876,26.53333435058594 239.875, 31.333328247070312 C 244.31944580078124,36.133322143554686 252.1416259765625,44.13332824707031 258.5416259765625, 53.55555725097656 C 264.9416259765625,62.977786254882815 266.1861083984375,68.48891906738281 271.875, 78.44447326660156 C 277.5638916015625,88.40002746582032 282.541650390625,95.15555725097656 286.986083984375, 103.33332824707031 C 291.430517578125,111.51109924316407 292.319384765625,114.53332214355468 294.09716796875, 119.33332824707031 C 295.874951171875,124.13333435058594 295.51943359375,125.37780456542968 295.875, 127.33335876464844 C 296.23056640625,129.28891296386718 295.875,128.57776794433593 295.875, 129.11109924316406 C 295.875,129.6444305419922 297.11944580078125,129.82223205566407 295.875, 130.00001525878906 C 294.63055419921875,130.17779846191405 297.11944580078125,130.5333465576172 289.65277099609375, 130.00001525878906 C 282.18609619140625,129.46668395996093 275.7860595703125,131.60002746582032 258.5416259765625, 127.33335876464844 C 241.2971923828125,123.06669006347656 227.075048828125,118.08890075683594 203.43060302734375, 108.66667175292969 C 179.7861572265625,99.24444274902343 160.7638427734375,89.1111053466797 140.31939697265625, 80.22221374511719 C 119.874951171875,71.33332214355468 112.5861328125,69.55554504394532 101.2083740234375, 64.22221374511719 C 89.830615234375,58.88888244628907 86.9861572265625,55.86666564941406 83.43060302734375, 53.55555725097656 C 79.875048828125,51.244448852539065 83.43060302734375,53.200006103515626 83.43060302734375, 52.66667175292969 C 83.43060302734375,52.13333740234375 80.7639404296875,51.777774047851565 83.43060302734375, 50.888885498046875 C 86.097265625,49.999996948242185 86.98614501953125,48.755560302734374 96.763916015625, 48.22222900390625 C 106.54168701171875,47.688897705078126 109.03057861328125,48.22222900390625 132.3194580078125, 48.22222900390625 C 155.60833740234375,48.22222900390625 175.51943359375,46.62222595214845 213.20831298828125, 48.22222900390625 C 250.8971923828125,49.82223205566406 280.76385498046875,50.7111328125 320.76385498046875, 56.22224426269531 C 360.76385498046875,61.73335571289063 383.69720458984375,69.73334655761718 413.20831298828125, 75.77778625488281 C 442.71942138671875,81.82222595214844 453.3860717773438,83.24443664550782 468.31939697265625, 86.44444274902344 C 483.2527221679687,89.64444885253906 483.60826416015624,90.71114196777344 487.87493896484375, 91.77781677246094 C 492.14161376953126,92.84449157714843 489.65277099609375,91.77781677246094 489.65277099609375, 91.77781677246094 C 489.65277099609375,91.77781677246094 488.58604736328124,92.48893737792969 487.87493896484375, 91.77781677246094 C 487.16383056640626,91.06669616699219 486.45277099609376,88.93333435058594 486.09722900390625, 88.22221374511719"
+																fill="none"
+																stroke-linecap="round"
+																stroke="#000000"
+																stroke-width="5"
+															></path>
+															<path
+																id="react-sketch-canvas__1"
+																d="M 394.5416259765625,154.00001525878906 C 394.5416259765625,153.4666778564453 394.3638427734375,152.2222137451172 394.5416259765625, 151.3333282470703 C 394.7194091796875,150.44444274902344 393.8305419921875,150.8000274658203 395.4305419921875, 149.5555877685547 C 397.0305419921875,148.31114807128907 397.030517578125,147.4222442626953 402.5416259765625, 145.1111297607422 C 408.052734375,142.80001525878907 413.386083984375,141.55556945800782 422.986083984375, 138.00001525878906 C 432.586083984375,134.4444610595703 438.27496337890625,131.24446716308594 450.5416259765625, 127.33335876464844 C 462.80828857421875,123.42225036621093 473.29716796875,121.11114196777343 484.31939697265625, 118.44447326660156 C 495.3416259765625,115.77780456542969 498.36387939453124,115.24446716308594 505.65277099609375, 114.00001525878906 C 512.9416625976562,112.75556335449218 516.6749633789062,112.75555114746093 520.7638549804688, 112.22221374511719 C 524.8527465820313,111.68887634277344 524.8527709960938,111.51110534667968 526.0972290039062, 111.33332824707031 C 527.3416870117187,111.15555114746094 526.2750366210937,111.33332824707031 526.9861450195312, 111.33332824707031 C 527.6972534179688,111.33332824707031 528.4083374023437,111.33332824707031 529.6527709960938, 111.33332824707031 C 530.8972045898438,111.33332824707031 531.4305297851563,111.33332824707031 533.2083129882812, 111.33332824707031 C 534.9860961914062,111.33332824707031 535.3416870117187,111.15555114746094 538.5416870117188, 111.33332824707031 C 541.7416870117188,111.51110534667968 546.1860961914062,111.33332214355468 549.2083129882812, 112.22221374511719 C 552.2305297851562,113.1111053466797 552.2305541992188,114.35556335449219 553.6527709960938, 115.77778625488281 C 555.0749877929687,117.20000915527343 555.7860717773438,116.84444274902344 556.3193969726562, 119.33332824707031 C 556.8527221679688,121.82221374511718 556.3193969726562,124.31109924316407 556.3193969726562, 128.2222137451172 C 556.3193969726562,132.13332824707032 558.2749389648437,132.48890075683593 556.3193969726562, 138.88890075683594 C 554.3638549804688,145.28890075683594 550.9861206054687,152.9333282470703 546.5416870117188, 160.2222137451172 C 542.0972534179688,167.51109924316407 540.1416870117188,169.82221374511718 534.0972290039062, 175.3333282470703 C 528.0527709960937,180.84444274902344 522.8971801757813,184.22223205566405 516.3193969726562, 187.7777862548828 C 509.7416137695312,191.33334045410157 505.1194213867187,191.68887634277343 501.20831298828125, 193.11109924316406 C 497.2972045898438,194.5333221435547 498.71942138671875,194.53334045410156 496.76385498046875, 194.88890075683594 C 494.80828857421875,195.2444610595703 495.5193725585938,196.84445495605468 491.43048095703125, 194.88890075683594 C 487.3415893554687,192.9333465576172 481.65272216796876,190.6222381591797 476.31939697265625, 185.1111297607422 C 470.98607177734374,179.6000213623047 469.20830078125,176.2222442626953 464.76385498046875, 167.33335876464844 C 460.3194091796875,158.44447326660156 456.2305053710937,147.06670837402345 454.09716796875, 140.6667022705078 C 451.9638305664063,134.26669616699218 454.09716796875,136.75555725097655 454.09716796875, 135.3333282470703 C 454.09716796875,133.91109924316407 451.07493896484374,133.9111114501953 454.09716796875, 133.55555725097656 C 457.11939697265626,133.20000305175782 459.786083984375,132.66666564941406 469.20831298828125, 133.55555725097656 C 478.6305419921875,134.44444885253907 484.67498779296875,133.02223205566406 501.20831298828125, 138.00001525878906 C 517.7416381835938,142.97779846191406 532.8526977539062,150.97781066894532 551.8749389648438, 158.44447326660156 C 570.8971801757813,165.9111358642578 583.5195190429688,170.71111145019532 596.3195190429688, 175.3333282470703 C 609.1195190429687,179.9555450439453 610.0082885742188,180.3111114501953 615.8749389648438, 181.55555725097656 C 621.7415893554687,182.8000030517578 622.6305297851562,181.55555725097656 625.6527709960938, 181.55555725097656 C 628.6750122070313,181.55555725097656 628.6750366210938,182.26666564941405 630.9861450195312, 181.55555725097656 C 633.2972534179687,180.84444885253907 635.6083129882812,179.77779235839844 637.2083129882812, 178.00001525878906 C 638.8083129882813,176.22223815917968 638.0972534179688,175.86667175292968 638.9861450195312, 172.6666717529297 C 639.8750366210937,169.4666717529297 641.1194458007812,164.66668395996095 641.6527709960938, 162.00001525878906 C 642.1860961914062,159.33334655761718 641.6527709960938,159.86666564941407 641.6527709960938, 159.3333282470703"
+																fill="none"
+																stroke-linecap="round"
+																stroke="#000000"
+																stroke-width="5"
+															></path>
+															<path
+																id="react-sketch-canvas__2"
+																d="M 571.4304809570312,187.7777862548828 C 571.4304809570312,187.7777862548828 571.6082397460938,187.60000915527343 571.4304809570312, 187.7777862548828 C 571.2527221679687,187.9555633544922 571.0750122070312,187.9555633544922 570.5416870117188, 188.6666717529297 C 570.0083618164062,189.37778015136718 569.8305297851563,189.73332824707032 568.7638549804688, 191.3333282470703 C 567.6971801757812,192.9333282470703 567.6972045898438,194.35555114746094 565.2083129882812, 196.6666717529297 C 562.7194213867188,198.97779235839843 559.3416137695312,200.93337707519532 556.3193969726562, 202.88893127441406 C 553.2971801757812,204.8444854736328 552.0527709960937,205.20000915527345 550.0972290039062, 206.44444274902344 C 548.1416870117188,207.68887634277343 549.2083618164063,206.97776794433594 546.5416870117188, 209.11109924316406 C 543.8750122070312,211.2444305419922 541.7416381835938,212.48887634277344 536.7638549804688, 217.11109924316406 C 531.7860717773438,221.7333221435547 525.3860961914063,228.1333221435547 521.6527709960938, 232.2222137451172 C 517.9194458007812,236.31110534667968 518.9861206054687,236.31110534667968 518.0972290039062, 237.55555725097656 C 517.2083374023438,238.80000915527344 517.5638793945312,238.08891906738282 517.2083129882812, 238.44447326660156 C 516.8527465820313,238.8000274658203 517.5638305664063,239.15555725097656 516.3193969726562, 239.3333282470703 C 515.0749633789062,239.51109924316407 513.6527954101563,239.68888244628906 510.98614501953125, 239.3333282470703 C 508.3194946289062,238.97777404785157 506.5417114257813,238.44444274902344 502.98614501953125, 237.55555725097656 C 499.4305786132812,236.6666717529297 496.40831298828124,235.77779235839844 493.20831298828125, 234.88890075683594 C 490.00831298828126,234.00000915527343 489.47503662109375,233.82221374511718 486.98614501953125, 233.11109924316406 C 484.49725341796875,232.39998474121094 483.0749877929687,231.86665954589844 480.76385498046875, 231.3333282470703 C 478.4527221679688,230.79999694824218 477.20826416015626,230.62221984863282 475.43048095703125, 230.44444274902344 C 473.65269775390624,230.26666564941405 473.8304809570312,230.79999694824218 471.87493896484375, 230.44444274902344 C 469.9193969726563,230.0888885498047 467.2527709960938,229.02222595214843 465.65277099609375, 228.6666717529297 C 464.0527709960937,228.31111755371094 464.9416137695313,228.84444885253907 463.87493896484375, 228.6666717529297 C 462.8082641601562,228.4888946533203 461.56383056640624,228.13334045410156 460.31939697265625, 227.7777862548828 C 459.07496337890626,227.42223205566407 458.541650390625,227.42223205566407 457.65277099609375, 226.88890075683594 C 456.7638916015625,226.3555694580078 456.2305541992188,225.46668395996093 455.875, 225.1111297607422"
+																fill="none"
+																stroke-linecap="round"
+																stroke="#000000"
+																stroke-width="5"
+															></path>
+														</g>
+													</svg>
+												</div>
+											</div>
+										</div>
+										<span data-slate-node="text"
+											><span data-slate-leaf="true"
+												><span data-slate-zero-width="n" data-slate-length="0"
+													>﻿<br /></span></span
+										></span>
+									</div>
+									<p data-slate-node="element">
+										<span data-slate-node="text"
+											><span data-slate-leaf="true"
+												><span data-slate-zero-width="n" data-slate-length="0"
+													>﻿<br /></span></span
+										></span>
+									</p>
+									<div data-slate-node="element">
+										<iframe
+											width="100%"
+											height="450px"
+											src="https://www.youtube.com/watch?v=xEx3-9v0-_o"
+											title="YouTube video player"
+											frameborder="0"
+											allow="
+												accelerometer;
+												autoplay;
+												clipboard-write;
+												encrypted-media;
+												gyroscope;
+												picture-in-picture;
+											"
+											allowfullscreen=""
+										></iframe>
+									</div>
+									<p data-slate-node="element">
+										<span data-slate-node="text"
+											><span data-slate-leaf="true"
+												><span data-slate-zero-width="n" data-slate-length="0"
+													>﻿<br /></span></span
+										></span>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="module" src="./My Note Taking App_2_files/main.tsx"></script>
+	</body>
+</html>

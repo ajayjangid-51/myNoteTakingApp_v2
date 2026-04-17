@@ -23,12 +23,14 @@ import {
 	Code2,
 	FileText,
 } from "lucide-react";
-import MonacoEditor from "@monaco-editor/react";
+// import MonacoEditor from "@monaco-editor/react";
+
 
 import html2pdf from "html2pdf.js";
 import DrawandErase from "./reactSketchCanvas/DrawandErase";
 import V1 from "./codeBlockEditor/V1";
 // import V1 from "./codeBlockEditor/V1";
+import Audio1 from "./audioComp/Audio1";
 
 interface NoteEditorProps {
 	value: any[];
@@ -67,10 +69,10 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 					toggleMark(editor, "underline");
 					return;
 
-				case "`":
-					event.preventDefault();
-					toggleMark(editor, "code");
-					return;
+				// case "`":
+				// 	event.preventDefault();
+				// 	toggleMark(editor, "code");
+				// 	return;
 
 				case "1":
 					event.preventDefault();
@@ -359,7 +361,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 					<Underline size={16} />
 				</button>
 
-				<button
+				{/* <button
 					title="Code (Ctrl+`)"
 					className={isMarkActive(editor, "code") ? "active" : ""}
 					onMouseDown={(e) => {
@@ -368,7 +370,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 					}}
 				>
 					<Code size={16} />
-				</button>
+				</button> */}
 
 				<button
 					title="Heading 1 (Ctrl+1)"
@@ -380,6 +382,7 @@ const NoteEditor: React.FC<NoteEditorProps> = ({
 				>
 					<Heading1 size={16} />
 				</button>
+
 				<button
 					title="Heading 2 (Ctrl+2)"
 					className={isBlockActive(editor, "heading-two") ? "active" : ""}
@@ -551,8 +554,8 @@ const Element = ({ attributes, children, element }: any) => {
 			return (
 				<div {...attributes}>
 					<iframe
-						width="560"
-						height="315"
+						width="100%"
+						height="450px"
 						src={`https://www.youtube.com/embed/${element.videoId}`}
 						title="YouTube video player"
 						frameBorder="0"
@@ -562,7 +565,8 @@ const Element = ({ attributes, children, element }: any) => {
 				</div>
 			);
 		case "audio":
-			return <audio {...attributes} src={element.url} controls />;
+			// return <audio {...attributes} src={element.url} controls />;
+			return <Audio1 />;
 		case "drawing":
 			return (
 				<div {...attributes} style={{ height: "55vh" }} contentEditable={false}>
